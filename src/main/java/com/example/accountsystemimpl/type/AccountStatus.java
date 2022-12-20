@@ -1,4 +1,4 @@
-package com.example.accountsystem.type;
+package com.example.accountsystemimpl.type;
 
 
 import lombok.AllArgsConstructor;

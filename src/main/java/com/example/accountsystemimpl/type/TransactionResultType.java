@@ -1,6 +1,6 @@
 package com.example.accountsystemimpl.type;
 
-public enum TranscactionResultType {
+public enum TransactionResultType {
 
     SUCCESS,
     FAIL;

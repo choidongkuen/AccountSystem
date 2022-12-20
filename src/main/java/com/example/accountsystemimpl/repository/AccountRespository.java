@@ -1,9 +1,11 @@
-package com.example.accountsystem.repository;
+package com.example.accountsystemimpl.repository;
 
-import com.example.accountsystem.domain.Account;
+import com.example.accountsystemimpl.domain.Account;
+import com.example.accountsystemimpl.domain.AccountUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -11,6 +13,15 @@ import java.util.Optional;
 public interface AccountRespository extends JpaRepository<Account,Long> {
 
     Optional<Account> findFirstByOrderByIdDesc();
+    Optional<Account> findByAccountNumber(String accountNumber);
 
-    Optional<Account> findLastByOrderById();
+    Integer countByAccountUser(AccountUser accountUser);
+
+    List<Account> findByAccountUser(AccountUser user);
+
+
+
+
+
+
 }

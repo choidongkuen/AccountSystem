@@ -1,16 +1,15 @@
-package com.example.accountsystem.controller;
+package com.example.accountsystemimpl.controller;
 
-
-import com.example.accountsystem.dto.CreateAccount;
-import com.example.accountsystem.service.AccountService;
-
+import com.example.accountsystemimpl.dto.AccountInfo;
+import com.example.accountsystemimpl.dto.CreateAccount;
+import com.example.accountsystemimpl.dto.DeleteAccount;
+import com.example.accountsystemimpl.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,13 +17,11 @@ public class AccountController {
 
     private final AccountService accountService;
 
-
-
-
     // 계좌 생성
     // CreateAccount.Request -> Accont -> Account -> CreatedAccount.Response
-    @PostMapping("/acount")
-    public CreateAccount.Response createAccount(@RequestBody @Valid CreateAccount.Request request){
+    @PostMapping("/account")
+    public CreateAccount.Response createAccount(
+            @RequestBody @Valid CreateAccount.Request request){
 
         return CreateAccount.Response.FromAccountDto(
                 accountService.createAccount(
@@ -33,4 +30,28 @@ public class AccountController {
         );
     }
 
+
+    // 계좌 해지
+    @DeleteMapping("/account")
+    public DeleteAccount.Response deleteAccount(
+            @RequestBody @Valid DeleteAccount.Request request){
+
+
+        return DeleteAccount.Response.fromAccountDto(
+                accountService.deleteAccount(
+                        request.getUserId(),
+                        request.getAccountNumber()
+                )
+        );
+    }
+
+    // 계좌 확인
+    @GetMapping("/account")
+    public List<AccountInfo> getAccountByUserId(
+            @RequestParam("userId") Long userId
+    ){
+        return accountService.getAccountsByUserId(userId).stream()
+                .map(AccountInfo::fromDto)
+                .collect(Collectors.toList());
+    }
 }

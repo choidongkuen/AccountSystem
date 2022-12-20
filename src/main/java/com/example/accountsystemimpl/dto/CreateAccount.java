@@ -1,9 +1,6 @@
-package com.example.accountsystem.dto;
+package com.example.accountsystemimpl.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -16,6 +13,7 @@ public class CreateAccount {
     @Setter
     @Builder
     @ToString
+    @AllArgsConstructor
     public static class Request {
 
         @NotNull
@@ -24,7 +22,7 @@ public class CreateAccount {
 
 
         @NotNull
-        @Min(100)
+        @Min(0)
         private Long initialBalance;
 
     }

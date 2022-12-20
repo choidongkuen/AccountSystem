@@ -1,7 +1,7 @@
-package com.example.accountsystem.exception;
+package com.example.accountsystemimpl.exception;
 
 
-import com.example.accountsystem.type.ErrorCode;
+import com.example.accountsystemimpl.type.ErrorCode;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

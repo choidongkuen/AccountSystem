@@ -1,6 +1,6 @@
-package com.example.accountsystem.dto;
+package com.example.accountsystemimpl.dto;
 
-import com.example.accountsystem.domain.Account;
+import com.example.accountsystemimpl.domain.Account;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +24,7 @@ public class AccountDto {
 
 
     public static AccountDto fromEntity(Account account) {
+
         return AccountDto.builder()
                          .userId(account.getAccountUser().getId())
                          .accountNumber(account.getAccountNumber())

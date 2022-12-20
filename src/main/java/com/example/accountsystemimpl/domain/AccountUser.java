@@ -1,4 +1,4 @@
-package com.example.accountsystem.domain;
+package com.example.accountsystemimpl.domain;
 
 
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class AccountUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -34,8 +34,6 @@ public class AccountUser {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-
 
 
 }

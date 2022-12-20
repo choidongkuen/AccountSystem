@@ -1,7 +1,9 @@
-package com.example.accountsystem.domain;
+package com.example.accountsystemimpl.domain;
 
 
-import com.example.accountsystem.type.AccountStatus;
+import com.example.accountsystemimpl.exception.AccountException;
+import com.example.accountsystemimpl.type.AccountStatus;
+import com.example.accountsystemimpl.type.ErrorCode;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Getter
+@Setter
 @Builder
 @Table
 @Entity
@@ -26,6 +29,11 @@ public class Account {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 다대일 단 방향
+    @ManyToOne
+    private AccountUser accountUser;
+
+    @Column(unique = true)
     private String accountNumber;
 
     @Enumerated(EnumType.STRING)
@@ -33,16 +41,20 @@ public class Account {
 
     private Long balance;
 
-
     private LocalDateTime registeredAt;
     private LocalDateTime unRegisteredAt;
-
-    @ManyToOne
-    private AccountUser accountUser;
 
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
-private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
+
+    public void useBalance(Long amount){
+
+        if(this.balance < amount){
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
+        }
+        this.balance -= amount;
+    }
 
 }
