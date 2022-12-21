@@ -1,8 +1,7 @@
 package com.example.accountsystemimpl.controller;
 
 
-import com.example.accountsystemimpl.dto.DeleteAccount;
-import com.example.accountsystemimpl.dto.TransactionDto;
+import com.example.accountsystemimpl.dto.CancelBalance;
 import com.example.accountsystemimpl.dto.UseBalance;
 import com.example.accountsystemimpl.exception.AccountException;
 import com.example.accountsystemimpl.service.TransactionService;
@@ -26,22 +25,45 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class TransactionController {
 
-    private final TransactionService transcationService;
+    private final TransactionService transactionService;
 
-
+    // 잔액 사용 API
     @PostMapping("/transaction/use")
     public UseBalance.Response useBalance(
             @RequestBody @Valid UseBalance.Request request
     ) {
 
-
         try {
-            return UseBalance.Response.fromAccountDto(
-                    transcationService.useBalance(request)
+            return UseBalance.Response.fromTransactionDto(
+                    transactionService.useBalance(request.getUserId(),
+                            request.getAccountNumber(),request.getAmount())
             );
         } catch (AccountException e) {
             log.error("Failed to use balance");
-            transcationService.saveFailedTransaction(request);
+            transactionService.saveFailedUserTransaction(
+                    request.getAccountNumber(),request.getAmount()
+            );
+            throw e;
+        }
+    }
+
+    // 잔액 사용 취소 API
+    @PostMapping("/transaction/cancel")
+    public CancelBalance.Response cancelBalance(
+            @RequestBody @Valid CancelBalance.Request request
+    ){
+
+        try{
+            return CancelBalance.Response.fromTransactionDto(
+                    transactionService.cancelBalance(request.getTransactionId()
+                    ,request.getAccountNumber(), request.getAmount()));
+
+        }catch (AccountException e){
+            log.error("Failed to cancel balance");
+            transactionService.saveFailedCancelTransaction(request.getAccountNumber(),
+                    request.getAmount()
+            );
+
             throw e;
         }
     }

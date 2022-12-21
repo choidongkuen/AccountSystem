@@ -1,16 +1,22 @@
 package com.example.accountsystemimpl.dto;
 
+
 import com.example.accountsystemimpl.type.TransactionResultType;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-public class UseBalance {
+
+/**
+ *  {
+ *      "transactionId",
+ *      "accountNumber",
+ *      "amount"
+ *  }
+ */
+public class CancelBalance {
 
 
     @Slf4j
@@ -21,18 +27,20 @@ public class UseBalance {
     @Setter
     public static class Request{
 
-        @NotNull
-        @Min(1)
-        private Long userId;
 
         @NotNull
+        private String transactionId;
+
+        @NotBlank
         @Size(min = 10, max = 10)
         private String accountNumber;
+
 
         @NotNull
         @Min(10)
         @Max(1000_000_000)
         private Long amount;
+
     }
 
     @Slf4j
@@ -41,23 +49,30 @@ public class UseBalance {
     @Builder
     @Getter
     @Setter
-    public static class Response {
+
+    public static class Response{
 
         private String accountNumber;
-        private TransactionResultType transactionResultType;
-        private Long amount;
-        private String transactionId;
-        private LocalDateTime transactionAt;
 
-        public static Response fromTransactionDto(TransactionDto dto) {
+        private TransactionResultType transactionResultType;
+
+        private String transactionId;
+
+        private Long amount;
+
+        private LocalDateTime transactedAt;
+
+        public static Response fromTransactionDto(TransactionDto dto){
 
             return Response.builder()
+                    .transactionId(dto.getTransactionId())
                     .accountNumber(dto.getAccountNumber())
                     .transactionResultType(dto.getTransactionResultType())
                     .amount(dto.getAmount())
-                    .transactionId(dto.getTransactionId())
-                    .transactionAt(dto.getTransactionAt())
+                    .transactedAt(dto.getTransactionAt())
                     .build();
         }
+
     }
+
 }
