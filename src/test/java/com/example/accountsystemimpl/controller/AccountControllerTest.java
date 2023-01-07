@@ -7,7 +7,6 @@ import com.example.accountsystemimpl.dto.DeleteAccount;
 import com.example.accountsystemimpl.service.AccountService;
 import com.example.accountsystemimpl.type.AccountStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.lang.runtime.ObjectMethods;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -105,66 +103,65 @@ class AccountControllerTest {
     @DisplayName("계좌 해지 테스트")
     void successDeleteAccount() {
         // given
-        given(accountService.deleteAccount(anyLong(),anyString()))
+        given(accountService.deleteAccount(anyLong(), anyString()))
                 .willReturn(AccountDto.builder()
-                        .userId(1L)
-                        .accountNumber("1234567890")
-                        .registeredAt(LocalDateTime.now())
-                        .unRegisteredAt(LocalDateTime.now())
-                        .build());
+                                      .userId(1L)
+                                      .accountNumber("1234567890")
+                                      .registeredAt(LocalDateTime.now())
+                                      .unRegisteredAt(LocalDateTime.now())
+                                      .build());
         // when
         // then
-        try{
+        try {
             mockMvc.perform(delete("/account")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(
-                            new DeleteAccount.Request(333L, "1234567890")
-                    )))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.userId").value(1))
-                    .andExpect(jsonPath("$.accountNumber").value("!234567890"))
-                    .andDo(print());
+                           .contentType(MediaType.APPLICATION_JSON)
+                           .content(objectMapper.writeValueAsString(
+                                   new DeleteAccount.Request(333L, "1234567890")
+                           )))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.userId").value(1))
+                   .andExpect(jsonPath("$.accountNumber").value("!234567890"))
+                   .andDo(print());
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
     }
 
     @Test
     @DisplayName("계좌 확인 테스트")
-    void successCheckAccount(){
+    void successCheckAccount() {
 
         // given
         List<AccountDto> accountDto
                 = Arrays.asList(AccountDto.builder()
-                                              .userId(1L)
-                                              .accountNumber("1234567890")
-                                              .balance(10000L)
-                                              .registeredAt(LocalDateTime.now())
-                                              .unRegisteredAt(LocalDateTime.now())
-                                              .build(),
-                                AccountDto.builder()
-                                              .userId(1L)
-                                              .accountNumber("1234567771")
-                                              .balance(20000L)
-                                              .registeredAt(LocalDateTime.now())
-                                              .unRegisteredAt(LocalDateTime.now())
-                                              .build());
+                                          .userId(1L)
+                                          .accountNumber("1234567890")
+                                          .balance(10000L)
+                                          .registeredAt(LocalDateTime.now())
+                                          .unRegisteredAt(LocalDateTime.now())
+                                          .build(),
+                AccountDto.builder()
+                          .userId(1L)
+                          .accountNumber("1234567771")
+                          .balance(20000L)
+                          .registeredAt(LocalDateTime.now())
+                          .unRegisteredAt(LocalDateTime.now())
+                          .build());
 
         given(accountService.getAccountsByUserId(anyLong()))
                 .willReturn(accountDto);
         // then
         try {
             mockMvc.perform(get("/account?userId=1"))
-                    .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
-                    .andExpect(jsonPath("$[0].balance").value("10000"))
-                    .andExpect(jsonPath("$[1].accountNumber").value("1234567771"))
-                    .andExpect(jsonPath("$[0].balance").value("20000"))
-                    .andDo(print());
+                   .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
+                   .andExpect(jsonPath("$[0].balance").value("10000"))
+                   .andExpect(jsonPath("$[1].accountNumber").value("1234567771"))
+                   .andExpect(jsonPath("$[0].balance").value("20000"))
+                   .andDo(print());
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-     }
+    }
 }

@@ -18,10 +18,4 @@ public interface AccountRespository extends JpaRepository<Account,Long> {
     Integer countByAccountUser(AccountUser accountUser);
 
     List<Account> findByAccountUser(AccountUser user);
-
-
-
-
-
-
 }
