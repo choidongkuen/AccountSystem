@@ -1,5 +1,6 @@
 package com.example.accountsystemimpl.dto;
 
+import com.example.accountsystemimpl.domain.Account;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +22,12 @@ public class AccountInfo {
 
     private Long balance;
 
+    public static AccountInfo fromEntity(Account account) {
 
+        return AccountInfo.builder()
+                .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance())
+                .build();
+    }
 
 }
