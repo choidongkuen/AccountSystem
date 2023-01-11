@@ -3,6 +3,7 @@ package com.example.accountsystemimpl.service;
 import com.example.accountsystemimpl.domain.Account;
 import com.example.accountsystemimpl.domain.AccountUser;
 import com.example.accountsystemimpl.dto.AccountDto;
+import com.example.accountsystemimpl.dto.AccountInfo;
 import com.example.accountsystemimpl.exception.AccountException;
 import com.example.accountsystemimpl.repository.AccountRespository;
 import com.example.accountsystemimpl.repository.AccountUserRepository;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.accountsystemimpl.type.AccountStatus.IN_USE;
+import static com.example.accountsystemimpl.type.ErrorCode.*;
+import static com.example.accountsystemimpl.type.ErrorCode.USER_NOT_FOUND;
 
 
 @Slf4j
@@ -35,7 +38,7 @@ public class AccountService {
         // 계좌의 번호 생성(저장된 최신 계좌번호 + 1)
         // 계좌를 저장하고, 정보 저장
         AccountUser accountUser = accountUserRepository.findById(userId).orElseThrow(() ->
-                new AccountException(ErrorCode.USER_NOT_FOUND));
+                new AccountException(USER_NOT_FOUND));
 
         validateCreateAccount(accountUser);
 
@@ -58,7 +61,7 @@ public class AccountService {
     // 가독성을 위해 메소드 추출(Option + Command + M)
     private void validateCreateAccount(AccountUser accountUser) {
         if(accountRespository.countByAccountUser(accountUser) >= 10){
-            throw new AccountException(ErrorCode.MAX_COUNT_PER_USER_TEN);
+            throw new AccountException(MAX_COUNT_PER_USER_TEN);
         }
     }
 
@@ -72,12 +75,12 @@ public class AccountService {
 
         // 사용자 없는 경우
         AccountUser accountUser = accountUserRepository.findById(userId)
-                                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND)
+                                .orElseThrow(() -> new AccountException(USER_NOT_FOUND)
         );
 
         // 계좌가 없는 경우
         Account account = accountRespository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND)
         );
 
         // 계좌 소유주과 사용자 아이디가 다른 경우
@@ -95,31 +98,33 @@ public class AccountService {
 
         // 계좌 소유주가 다른 경우
         if(accountUser.getId() != account.getAccountUser().getId()){
-            throw new AccountException(ErrorCode.USER_ACCOUNT_UNMATCH);
+            throw new AccountException(USER_ACCOUNT_UNMATCH);
         }
 
         // 계좌가 이미 해지 상태인 경우
         if(account.getAccountStatus() == AccountStatus.STOP_USE){
-            throw new AccountException(ErrorCode.ACCOUNT_ALREADY_STOP);
+            throw new AccountException(ACCOUNT_ALREADY_STOP);
         }
 
         // 계좌 잔액이 남아있는 경우
         if(account.getBalance() > 0){
-            throw new AccountException(ErrorCode.ACCOUNT_HAS_BALANCE);
+            throw new AccountException(ACCOUNT_HAS_BALANCE);
         }
     }
 
     @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
 
-        // 사용자 없는 경우
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                                                       .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        AccountUser user = accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
 
-        List<Account> accounts = accountRespository.findByAccountUser(accountUser);
+
+        List<Account> accounts = accountRespository.findByAccountUser(user);
+
 
         return accounts.stream()
                 .map(AccountDto::fromEntity)
                 .collect(Collectors.toList());
+
     }
 }
