@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 
-
 // Why? Dto 를 여러개로?
 // 다목적이면 -> 복잡한 상황이 생기면 -> 의도치 않은 장애 발생 가능성
 // 각 기능에 맞춘 클래스를 생성하자!
@@ -18,15 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 
 public class AccountInfo {
 
-
     private String accountNumber;
+
     private Long balance;
 
-    public static AccountInfo fromDto(AccountDto accountDto) {
 
-        return AccountInfo.builder()
-                  .accountNumber(accountDto.getAccountNumber())
-                  .balance(accountDto.getBalance())
-                  .build();
-    }
 }
