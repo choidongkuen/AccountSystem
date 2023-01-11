@@ -22,7 +22,7 @@ public class AccountInfo {
 
     private Long balance;
 
-    public static AccountInfo fromEntity(Account account) {
+    public static AccountInfo fromAccountDto(AccountDto account) {
 
         return AccountInfo.builder()
                 .accountNumber(account.getAccountNumber())

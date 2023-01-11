@@ -1,5 +1,6 @@
 package com.example.accountsystemimpl.controller;
 
+import com.example.accountsystemimpl.dto.AccountDto;
 import com.example.accountsystemimpl.dto.AccountInfo;
 import com.example.accountsystemimpl.dto.CreateAccount;
 import com.example.accountsystemimpl.dto.DeleteAccount;
@@ -46,12 +47,15 @@ public class AccountController {
     }
 
     // 계좌 확인
-    @GetMapping("/account")
+    @GetMapping ("/account")
     public List<AccountInfo> getAccountByUserId(
             @RequestParam("userId") Long userId
     ){
-        return accountService.getAccountsByUserId(userId).stream()
-                .map(AccountInfo::fromDto)
+
+        return accountService.getAccountsByUserId(userId)
+                .stream().map(AccountInfo :: fromAccountDto)
                 .collect(Collectors.toList());
+
     }
+
 }
