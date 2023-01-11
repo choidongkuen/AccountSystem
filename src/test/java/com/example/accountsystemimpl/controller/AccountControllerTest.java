@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AccountController.class)
 class AccountControllerTest {
 
-    @MockBean
+    @MockBean // spring-test 에서 지원
     private AccountService accountService;
 
     @Autowired
@@ -69,6 +69,8 @@ class AccountControllerTest {
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+
+
         }
     }
 

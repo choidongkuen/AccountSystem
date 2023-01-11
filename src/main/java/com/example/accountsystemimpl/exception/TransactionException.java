@@ -16,7 +16,6 @@ public class TransactionException extends RuntimeException{
     public ErrorCode errorCode;
     public String message;
 
-
     public TransactionException(ErrorCode errorCode){
         this.errorCode = errorCode;
         this.message = errorCode.getDescription();
