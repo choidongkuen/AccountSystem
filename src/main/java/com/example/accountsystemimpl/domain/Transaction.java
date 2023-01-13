@@ -51,5 +51,4 @@ public class Transaction {
     private LocalDateTime updatedAt;
 
 
-
 }
