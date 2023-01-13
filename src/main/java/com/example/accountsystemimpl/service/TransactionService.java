@@ -22,7 +22,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.example.accountsystemimpl.type.AccountStatus.IN_USE;
+import static com.example.accountsystemimpl.type.TransactionResultType.FAIL;
 import static com.example.accountsystemimpl.type.TransactionResultType.SUCCESS;
+import static com.example.accountsystemimpl.type.TransactionType.CANCEL;
 import static com.example.accountsystemimpl.type.TransactionType.USE;
 
 @Slf4j
@@ -158,14 +160,14 @@ public class TransactionService {
 //
 //    }
 //
-//    @Transactional
-//    public void saveFailedCancelTransaction(String accountNumber, Long amount){
-//
-//        Account account = accountRespository.findByAccountNumber(accountNumber)
-//                                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
-//
-//        getTransactionDto(CANCEL, FAIL, account, amount);
-//
-//    }
+    @Transactional
+    public void saveFailedCancelTransaction(String accountNumber, Long amount){
+
+        Account account = accountRespository.findByAccountNumber(accountNumber)
+                                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        getTransactionDto(CANCEL, FAIL, account, amount);
+
+    }
 //}
 }
