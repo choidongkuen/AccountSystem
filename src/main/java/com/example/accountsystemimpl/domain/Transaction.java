@@ -33,14 +33,14 @@ public class Transaction {
     private TransactionType transactionType;
 
     @Enumerated(EnumType.STRING)
-    private TransactionResultType transactionResultType;
+    private TransactionResultType transactionResultType; // 성공 or 실패
 
     @ManyToOne
     private Account account;
     private Long amount;
     private Long balanceSnapshot;
 
-    private String transactionId;
+    private String transactionId; // 보안을 위해 별도 생성
 
     private LocalDateTime transactionAt;
 
@@ -52,3 +52,6 @@ public class Transaction {
 
 
 }
+
+// 수정했습니다 확인 부탁드립니다.
+// 두번째 수정입니다. 다시 확인 부탁드릴께요!
