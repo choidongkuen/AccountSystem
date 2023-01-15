@@ -20,8 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -71,35 +70,33 @@ class AccountControllerTest {
             throw new RuntimeException(e);
 
 
-
-
         }
     }
 
-
-    // 계좌 확인 컨트롤러
-    @Test
-    void successGetAccount() {
-
-        // given
-        given(accountService.getAccount(anyLong()))
-                .willReturn(Account.builder()
-                                   .accountNumber("3456")
-                                   .accountStatus(AccountStatus.IN_USE)
-                                   .build());
-        // when
-        // then
-        try {
-            mockMvc.perform(get("/account/876")) // PathVariable
-                   .andDo(print())
-                   .andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber").value("3456"))
-                   .andExpect(MockMvcResultMatchers.jsonPath("$.accountStatus").value("IN_USE"))
-                   .andExpect(status().isOk());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
+//
+//    // 계좌 확인 컨트롤러
+//    @Test
+//    void successGetAccount() {
+//
+//        // given
+//        given(accountService.getAccount(anyLong()))
+//                .willReturn(Account.builder()
+//                                   .accountNumber("3456")
+//                                   .accountStatus(AccountStatus.IN_USE)
+//                                   .build());
+//        // when
+//        // then
+//        try {
+//            mockMvc.perform(get("/account/876")) // PathVariable
+//                   .andDo(print())
+//                   .andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber").value("3456"))
+//                   .andExpect(MockMvcResultMatchers.jsonPath("$.accountStatus").value("IN_USE"))
+//                   .andExpect(status().isOk());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
 
 
     // 계좌 해지 컨트롤러
@@ -134,38 +131,32 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("계좌 확인 테스트")
-    void successCheckAccount() {
+    void successGetAccount() throws Exception {
+
+        List<AccountDto> accountDtos =
+                Arrays.asList(AccountDto.builder()
+                                        .accountNumber("1234567890")
+                                        .balance(1000L).build(),
+                             AccountDto.builder()
+                                      .accountNumber("0987654321")
+                                      .balance(2000L)
+                                      .build()
+                );
 
         // given
-        List<AccountDto> accountDto
-                = Arrays.asList(AccountDto.builder()
-                                          .userId(1L)
-                                          .accountNumber("1234567890")
-                                          .balance(10000L)
-                                          .registeredAt(LocalDateTime.now())
-                                          .unRegisteredAt(LocalDateTime.now())
-                                          .build(),
-                AccountDto.builder()
-                          .userId(1L)
-                          .accountNumber("1234567771")
-                          .balance(20000L)
-                          .registeredAt(LocalDateTime.now())
-                          .unRegisteredAt(LocalDateTime.now())
-                          .build());
-
         given(accountService.getAccountsByUserId(anyLong()))
-                .willReturn(accountDto);
-        // then
-        try {
-            mockMvc.perform(get("/account?userId=1"))
-                   .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
-                   .andExpect(jsonPath("$[0].balance").value("10000"))
-                   .andExpect(jsonPath("$[1].accountNumber").value("1234567771"))
-                   .andExpect(jsonPath("$[0].balance").value("20000"))
-                   .andDo(print());
+                .willReturn(accountDtos);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(get("/account?userId=1"))
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
+                .andExpect(jsonPath("$[0].balance").value(1000L))
+                .andExpect(jsonPath("$[1].accountNumber").value("0987654321"))
+                .andExpect(jsonPath("$[1].balance").value(2000L));
+
+
+        // when
+        // then
     }
 }

@@ -14,13 +14,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.example.accountsystemimpl.type.TransactionResultType.SUCCESS;
-import static com.example.accountsystemimpl.type.TransactionType.USE;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -74,22 +79,24 @@ class TransactionControllerTest {
 
 
     }
-
     @Test
     @DisplayName("잔액 사용 취소 성공")
-    void successCancelBalance(){
+    void successCancelBalance() throws Exception {
 
         // given
-        given(transactionService.cancelBalance(anyString(), anyString(), anyLong()))
-                .willReturn(TransactionDto.builder()
-                                          .accountNumber("1000000000")
-                                          .transactionAt(LocalDateTime.now())
-                                          .amount(12345L)
-                                          .transactionId("transactionId")
-                                          .transactionResultType(SUCCESS)
-                                          .build());
+        given(transactionService.cancelBalance(anyString(),anyString(),anyLong()))
+                                .willReturn(TransactionDto.builder()
+                                .accountNumber("1000000000")
+                                .amount(12345L)
+                                .transactionResultType(SUCCESS)
+                                .transactionId("abcdefa")
+                                .transactionAt(LocalDateTime.now())
+                                .build()
+        );
+        
         // when
         // then
+
         try {
             mockMvc.perform(post("/transaction/cancel")
                            .contentType(MediaType.APPLICATION_JSON)
@@ -134,6 +141,22 @@ class TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value("abcde"))
                 .andExpect(jsonPath("$.transactionType").value("USE"))
                 .andExpect(jsonPath("$.amount").value(1234L));
+
+
+        
+        mockMvc.perform(post("/transaction/cancel")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        CancelBalance.Request.builder()
+                                .transactionId("abcdefa")
+                                .accountNumber("1000000000")
+                                .amount(12345L)
+                                .build()
+                        
+                ))
+        ).andDo(print())
+                .andExpect(jsonPath("$.accountNumber").value("1000000000"))
+                .andExpect(jsonPath("$.amount").value(12345L))
 
 
      }
