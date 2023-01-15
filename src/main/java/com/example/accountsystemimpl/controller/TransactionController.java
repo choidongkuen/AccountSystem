@@ -2,14 +2,13 @@ package com.example.accountsystemimpl.controller;
 
 
 import com.example.accountsystemimpl.dto.CancelBalance;
+import com.example.accountsystemimpl.dto.QueryTransactionResponse;
 import com.example.accountsystemimpl.dto.UseBalance;
 import com.example.accountsystemimpl.exception.AccountException;
 import com.example.accountsystemimpl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -54,7 +53,7 @@ public class TransactionController {
     ){
 
         try{
-            return CancelBalance.Response.fromTransactionDto(
+            return CancelBalance.Response.from(
                     transactionService.cancelBalance(request.getTransactionId()
                     ,request.getAccountNumber(), request.getAmount()));
 
@@ -66,5 +65,16 @@ public class TransactionController {
 
             throw e;
         }
+    }
+
+    @GetMapping("/transaction/{transactionId}")
+    public QueryTransactionResponse queryTransaction(
+            @PathVariable String transactionId
+    ) {
+
+        return QueryTransactionResponse.fromTransactionDto(
+                transactionService.queryTransaction(transactionId)
+        );
+
     }
 }
