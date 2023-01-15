@@ -28,43 +28,57 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     // 잔액 사용 API
-    @PostMapping("/transaction/use")
+    @PostMapping("/transaction/user")
     public UseBalance.Response useBalance(
-            @RequestBody @Valid UseBalance.Request request
-    ) {
+            @Valid @RequestBody UseBalance.Request request
 
-        try {
-            return UseBalance.Response.fromTransactionDto(
-                    transactionService.useBalance(request.getUserId(),
-                            request.getAccountNumber(),request.getAmount())
-            );
-        } catch (AccountException e) {
-            log.error("Failed to use balance");
-            transactionService.saveFailedUserTransaction(
-                    request.getAccountNumber(),request.getAmount()
-            );
-            throw e;
-        }
-    }
-
-    // 잔액 사용 취소 API
-    @PostMapping("/transaction/cancel")
-    public CancelBalance.Response cancelBalance(
-            @RequestBody @Valid CancelBalance.Request request
     ){
 
         try{
-            return CancelBalance.Response.fromTransactionDto(
-                    transactionService.cancelBalance(request.getTransactionId()
-                    ,request.getAccountNumber(), request.getAmount()));
 
-        }catch (AccountException e){
-            log.error("Failed to cancel balance");
-            transactionService.saveFailedCancelTransaction(request.getAccountNumber(),
+            return UseBalance.Response.fromTransactionDto(
+                    transactionService.useBalance(request.getUserId(),
+                            request.getAccountNumber(), request.getAmount()
+                    )
+
+            );
+
+        }catch (AccountException e) {
+
+            log.error("Failed to use Balance");
+
+            transactionService.saveFailedCancelTransaction(
+                    request.getAccountNumber(),
                     request.getAmount()
             );
 
             throw e;
         }
+
+
+
     }
+
+
+
+//    // 잔액 사용 취소 API
+//    @PostMapping("/transaction/cancel")
+//    public CancelBalance.Response cancelBalance(
+//            @RequestBody @Valid CancelBalance.Request request
+//    ){
+//
+//        try{
+//            return CancelBalance.Response.fromTransactionDto(
+//                    transactionService.cancelBalance(request.getTransactionId()
+//                    ,request.getAccountNumber(), request.getAmount()));
+//
+//        }catch (AccountException e){
+//            log.error("Failed to cancel balance");
+//            transactionService.saveFailedCancelTransaction(request.getAccountNumber(),
+//                    request.getAmount()
+//            );
+//
+//            throw e;
+//        }
+//    }
 }
