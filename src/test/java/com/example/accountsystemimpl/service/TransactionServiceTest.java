@@ -29,6 +29,7 @@ import static com.example.accountsystemimpl.type.TransactionResultType.FAIL;
 import static com.example.accountsystemimpl.type.TransactionResultType.SUCCESS;
 import static com.example.accountsystemimpl.type.TransactionType.CANCEL;
 import static com.example.accountsystemimpl.type.TransactionType.USE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -578,5 +579,44 @@ class TransactionServiceTest {
         // then
         assertEquals(exception.getErrorCode(),
                 ErrorCode.CANCEL_AFTER_ONE_YEAR_TRANSACTION);
+    }
+
+    @Test
+    @DisplayName("잔액 사용 확인 Test")
+    void successQueryTransaction(){
+
+        // given
+        AccountUser accountUser = AccountUser.builder()
+                .id(12L)
+                .name("Pobi")
+                .build();
+
+        Account account = Account.builder()
+                .accountUser(accountUser)
+                .id(1L)
+                .accountStatus(IN_USE)
+                .balance(1000L)
+                .accountNumber("1000000000")
+                .build();
+
+        Transaction transaction = Transaction.builder()
+                .account(account)
+                .transactionType(USE)
+                .transactionResultType(SUCCESS)
+                .transactionId("transactionId")
+                .transactionAt(LocalDateTime.now())
+                .amount(CANCEL_AMOUNT)
+                .balanceSnapshot(9000L)
+                .build();
+
+        given(transactionRepository.findByTransactionId(anyString()))
+                .willReturn(Optional.of(transaction));
+        // when
+        TransactionDto dto = transactionService.queryTransaction("trxId");
+        // then
+
+        assertThat(dto.getTransactionId()).isEqualTo("transactionId");
+        assertThat(dto.getTransactionType().toString()).isEqualTo(USE.toString());
+        assertThat(dto.getAccountNumber()).isEqualTo("1000000000");
     }
 }

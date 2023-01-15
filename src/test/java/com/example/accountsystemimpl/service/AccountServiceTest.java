@@ -348,7 +348,13 @@ class AccountServiceTest {
 
 
         // then
+
+        assertEquals(exception.getErrorCode(), ErrorCode.USER_NOT_FOUND);
+    }
+
+
         assertThat(accountDtos.size()).isEqualTo(2);
         assertEquals("1234567890", accountDtos.get(0).getAccountNumber());
      }
+
 }

@@ -5,7 +5,11 @@ Content-Type: application/json
 {
   "userId" : 1,
   "accountNumber" : "1000000001",
+
+  "amount" : 10000
+
   "amount" : 1000
+
 }
 
 
