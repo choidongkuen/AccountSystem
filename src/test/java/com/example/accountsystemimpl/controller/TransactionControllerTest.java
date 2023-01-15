@@ -5,6 +5,7 @@ import com.example.accountsystemimpl.dto.TransactionDto;
 import com.example.accountsystemimpl.dto.UseBalance;
 import com.example.accountsystemimpl.dto.UseBalance.Request;
 import com.example.accountsystemimpl.service.TransactionService;
+import com.example.accountsystemimpl.type.TransactionType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 
 import static com.example.accountsystemimpl.type.TransactionResultType.SUCCESS;
+import static com.example.accountsystemimpl.type.TransactionType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -108,4 +111,32 @@ class TransactionControllerTest {
 
 
     }
+
+    @Test
+    @DisplayName("잔액 사용 확인 성공")
+    void successQueryTranscaction() throws Exception {
+
+        // given
+        given(transactionService.queryTransaction(anyString()))
+                .willReturn(TransactionDto.builder()
+                        .accountNumber("1000000000")
+                        .amount(1234L)
+                        .transactionType(USE)
+                        .transactionId("abcde")
+                        .build()
+                );
+
+        // when
+        // then
+
+        mockMvc.perform(get("/transaction/abcde"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountNumber").value("1000000000"))
+                .andExpect(jsonPath("$.transactionId").value("abcde"))
+                .andExpect(jsonPath("$.transactionType").value("USE"))
+                .andExpect(jsonPath("$.amount").value(1234L));
+
+
+     }
 }
