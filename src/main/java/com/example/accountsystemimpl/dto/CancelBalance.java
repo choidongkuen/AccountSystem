@@ -1,40 +1,33 @@
 package com.example.accountsystemimpl.dto;
 
-
 import com.example.accountsystemimpl.type.TransactionResultType;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-
-/**
- *  {
- *      "transactionId",
- *      "accountNumber",
- *      "amount"
- *  }
- */
 public class CancelBalance {
 
+    /**
+     * request 파라미터
+     * {
+     * "transactionId" : "1" ,
+     * "accountNumber" : "1000000000",
+     * "amount" : 1000
+     * }
+     */
 
-    @Slf4j
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
     @Getter
     @Setter
-    public static class Request{
+    @AllArgsConstructor
+    public static class Request {
 
-
-        @NotNull
+        @NotBlank
         private String transactionId;
 
         @NotBlank
         @Size(min = 10, max = 10)
         private String accountNumber;
-
 
         @NotNull
         @Min(10)
@@ -43,14 +36,23 @@ public class CancelBalance {
 
     }
 
-    @Slf4j
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
+    /**
+     * response 파라미터
+     * {
+     * "accountNumber" : "1000000000",
+     * "transactionRequest" : "S",
+     * "transactionId" ~~~~,
+     * "amount" : 1000 ,
+     * "transactionAt" : ~~~~
+     * }
+     */
+
     @Getter
     @Setter
-
-    public static class Response{
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Response {
 
         private String accountNumber;
 
@@ -60,19 +62,17 @@ public class CancelBalance {
 
         private Long amount;
 
-        private LocalDateTime transactedAt;
+        private LocalDateTime transactionAt;
 
-        public static Response fromTransactionDto(TransactionDto dto){
+        public static Response from(TransactionDto transactionDto) {
 
             return Response.builder()
-                    .transactionId(dto.getTransactionId())
-                    .accountNumber(dto.getAccountNumber())
-                    .transactionResultType(dto.getTransactionResultType())
-                    .amount(dto.getAmount())
-                    .transactedAt(dto.getTransactionAt())
-                    .build();
+                           .accountNumber(transactionDto.getAccountNumber())
+                           .transactionResultType(transactionDto.getTransactionResultType())
+                           .transactionId(transactionDto.getTransactionId())
+                           .amount(transactionDto.getAmount())
+                           .transactionAt(transactionDto.getTransactionAt())
+                           .build();
         }
-
     }
-
 }
