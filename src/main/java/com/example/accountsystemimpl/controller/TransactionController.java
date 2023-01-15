@@ -50,7 +50,7 @@ public class TransactionController {
     }
 
     // 잔액 사용 취소 API
-    @DeleteMapping("transaction/cancel")
+    @PostMapping("transaction/cancel")
     public CancelBalance.Response cancelBalance(
             @Valid @RequestBody CancelBalance.Request request
     ) {
