@@ -95,14 +95,91 @@ public class TransactionService {
             Long amount
     ) {
         return (transactionRepository.save(Transaction.builder()
-                                                      .transactionType(transactionType)
-                                                      .transactionResultType(transactionResultType)
-                                                      .account(account)
-                                                      .amount(amount)
-                                                      .balanceSnapshot(account.getBalance())
-                                                      .transactionId(UUID.randomUUID().toString().replace("-", ""))
-                                                      .transactionAt(LocalDateTime.now())
-                                                      .build()));
+              .transactionType(transactionType)
+              .transactionResultType(transactionResultType)
+              .account(account)
+              .amount(amount)
+              .balanceSnapshot(account.getBalance())
+              .transactionId(UUID.randomUUID().toString().replace("-", ""))
+              .transactionAt(LocalDateTime.now())
+              .build()));
+    }
+
+
+
+    /**
+     * 1. 거래 아이디에 해당하는 거래가 없는 경우
+     * 2. 계좌가 없는 경우
+     * 3. 거래와 계좌가 일치하지 않는 경우
+     * 4. 거래 금액과 거래 취소 금액이 다른 경우
+     * 5. 1년이 넘은 거래는 사용 취소 불가능
+     * 6. 해당 계좌에서 거래가 진행 중일 때 불가능
+     */
+
+    @Transactional
+    public TransactionDto cancelBalance(
+            String transactionId,
+            String accountNumber,
+            Long amount
+    ) {
+
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                                   .orElseThrow(() -> new AccountException(ErrorCode.TRANSACTION_NOT_FOUND)
+        );
+
+        Account account = accountRespository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND)
+        );
+
+        validationCancelBalance(transaction,account,amount);
+
+        account.cancelBalance(amount);
+
+        return TransactionDto.fromEntity(
+                saveAndGetTransaction(
+                        CANCEL,
+                        SUCCESS,
+                        account,
+                        amount
+                )
+        );
+    }
+
+    private Transaction saveAndGetTransaction(
+            TransactionType transactionType,
+            TransactionResultType transactionResultType,
+            Account account,
+            Long amount
+    ) {
+        return transactionRepository.save(
+                Transaction.builder()
+                        .transactionType(transactionType)
+                        .transactionResultType(transactionResultType)
+                        .account(account)
+                        .amount(amount)
+                        .balanceSnapshot(account.getBalance())
+                        .transactionId(UUID.randomUUID().toString().replace("-",""))
+                        .transactionAt(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    private void validationCancelBalance(Transaction transaction, Account account, Long amount) {
+
+        // 계좌가 다른 경우
+        if(transaction.getAccount() != account) {
+            throw new AccountException(ErrorCode.TRANSACTION_ACCOUNT_UNMATCH);
+        }
+
+        // 취소 금액과 사용 금액이 다른 경우
+        if(transaction.getAmount() != amount){
+            throw new AccountException(ErrorCode.TRANSACTIONAMOUNT_CANCELAMOUNT_UNMATCH);
+        }
+
+        // 1년 지난 거래인 경우
+        if(transaction.getTransactionAt().isBefore(LocalDateTime.now().minusYears(1))) {
+            throw new AccountException(ErrorCode.CANCEL_AFTER_ONE_YEAR_TRANSACTION);
+        }
     }
 
 
@@ -160,6 +237,7 @@ public class TransactionService {
 //
 //    }
 //
+
     @Transactional
     public void saveFailedCancelTransaction(String accountNumber, Long amount){
 
@@ -169,5 +247,9 @@ public class TransactionService {
         getTransactionDto(CANCEL, FAIL, account, amount);
 
     }
+
+
+}
+
 //}
 }
