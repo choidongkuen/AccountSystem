@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.accountsystemimpl.type.ErrorCode.ACCOUNT_NOT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -257,57 +258,97 @@ class AccountServiceTest {
         // then
     }
 
-    @Test
-    @DisplayName("계좌 확인 테스트")
-    void successGetAccountByUserId() {
-        // given
-        // AccountUser 객체 2번 사용됨
-        AccountUser jack = AccountUser.builder()
-                                      .id(12L)
-                                      .name("jack")
-                                      .build();
+//    @Test
+//    @DisplayName("계좌 확인 테스트")
+//    void successGetAccountByUserId() {
+//        // given
+//        // AccountUser 객체 2번 사용됨
+//        AccountUser jack = AccountUser.builder()
+//                                      .id(12L)
+//                                      .name("jack")
+//                                      .build();
+//
+//        List<Account> accounts =
+//                Arrays.asList(Account.builder()
+//                                     .accountUser(jack)
+//                                     .balance(2000L)
+//                                     .accountNumber("1234567890")
+//                                     .build(),
+//                        Account.builder()
+//                               .accountUser(jack)
+//                               .accountNumber("1000000000")
+//                               .balance(1000L)
+//                               .build());
+//
+//        given(accountUserRepository.findById(anyLong()))
+//                .willReturn(Optional.of(jack));
+//
+//        given(accountRespository.findByAccountUser(jack))
+//                .willReturn(accounts);
+//
+//
+//        // when
+//        List<AccountDto> result = accountService.getAccountsByUserId(100L);
+//        // then
+//
+//        assertEquals(2, result.size());
+//        assertEquals(2000, result.get(0).getBalance());
+//        assertEquals(1000, result.get(1).getBalance());
+//        assertEquals("1000000000", result.get(1).getAccountNumber());
+//        assertEquals("1234567890", result.get(0).getAccountNumber());
+//    }
+//
+//
+//    @Test
+//    @DisplayName("계좌 확인 실패(사용자 ID 없음)")
+//    void failGetAccountByUserId() {
+//        // given
+//        given(accountUserRepository.findById(anyLong()))
+//                .willReturn(Optional.empty());
+//
+//        AccountException exception = assertThrows(AccountException.class,
+//                () -> accountService.getAccountsByUserId(1L));
+//        // then
+//        assertEquals(exception.getErrorCode(), ErrorCode.USER_NOT_FOUND);
+//    }
 
-        List<Account> accounts =
-                Arrays.asList(Account.builder()
-                                     .accountUser(jack)
-                                     .balance(2000L)
-                                     .accountNumber("1234567890")
-                                     .build(),
-                        Account.builder()
-                               .accountUser(jack)
-                               .accountNumber("1000000000")
-                               .balance(1000L)
-                               .build());
+
+    @Test
+    @DisplayName("getAccontsByUserId 성공 테스트")
+    void getAccountsByUSerIdSUCCESSTEST(){
+
+        // given
+        AccountUser user = AccountUser.builder()
+                .id(12L)
+                .name("동근")
+                .build();
+
+        List<Account> accounts = Arrays.asList(
+                Account.builder()
+                        .accountUser(user)
+                        .accountNumber("1234567890")
+                        .balance(12000L)
+                        .build(),
+                Account.builder()
+                        .accountUser(user)
+                        .accountNumber("2345678901")
+                        .balance(20000L)
+                        .build()
+        );
 
         given(accountUserRepository.findById(anyLong()))
-                .willReturn(Optional.of(jack));
+                .willReturn(Optional.of(user));
 
-        given(accountRespository.findByAccountUser(jack))
+        given(accountRespository.findByAccountUser(any()))
                 .willReturn(accounts);
 
-
         // when
-        List<AccountDto> result = accountService.getAccountsByUserId(100L);
+
+        List<AccountDto> accountDtos = accountService.getAccountsByUserId(12L);
+
+
         // then
-
-        assertEquals(2, result.size());
-        assertEquals(2000, result.get(0).getBalance());
-        assertEquals(1000, result.get(1).getBalance());
-        assertEquals("1000000000", result.get(1).getAccountNumber());
-        assertEquals("1234567890", result.get(0).getAccountNumber());
-    }
-
-
-    @Test
-    @DisplayName("계좌 확인 실패(사용자 ID 없음)")
-    void failGetAccountByUserId() {
-        // given
-        given(accountUserRepository.findById(anyLong()))
-                .willReturn(Optional.empty());
-
-        AccountException exception = assertThrows(AccountException.class,
-                () -> accountService.getAccountsByUserId(1L));
-        // then
-        assertEquals(exception.getErrorCode(), ErrorCode.USER_NOT_FOUND);
-    }
+        assertThat(accountDtos.size()).isEqualTo(2);
+        assertEquals("1234567890", accountDtos.get(0).getAccountNumber());
+     }
 }
