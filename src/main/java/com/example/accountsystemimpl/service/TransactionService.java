@@ -29,8 +29,8 @@ import static com.example.accountsystemimpl.type.TransactionType.CANCEL;
 import static com.example.accountsystemimpl.type.TransactionType.USE;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class TransactionService {
 
 
@@ -67,7 +67,7 @@ public class TransactionService {
 
     private void validationUseBalance(AccountUser accountUser, Account account, Long amount) {
 
-        if (account.getAccountUser().getId() != accountUser.getId()) {
+        if (!Objects.equals(account.getAccountUser().getId(), accountUser.getId())) {
             throw new AccountException(ErrorCode.USER_ACCOUNT_UNMATCH);
         }
 
@@ -136,33 +136,18 @@ public class TransactionService {
         account.cancelBalance(amount);
 
         return TransactionDto.fromEntity(
-                saveAndGetTransaction(
-                        CANCEL,
-                        SUCCESS,
-                        account,
-                        amount
-                )
+               transactionRepository.save(Transaction.builder()
+                       .transactionType(CANCEL)
+                       .transactionResultType(SUCCESS)
+                       .account(account)
+                       .amount(amount)
+                       .balanceSnapshot(account.getBalance())
+                       .transactionId(UUID.randomUUID().toString())
+                       .transactionAt(LocalDateTime.now())
+                       .build())
         );
     }
 
-    private Transaction saveAndGetTransaction(
-            TransactionType transactionType,
-            TransactionResultType transactionResultType,
-            Account account,
-            Long amount
-    ) {
-        return transactionRepository.save(
-                Transaction.builder()
-                        .transactionType(transactionType)
-                        .transactionResultType(transactionResultType)
-                        .account(account)
-                        .amount(amount)
-                        .balanceSnapshot(account.getBalance())
-                        .transactionId(UUID.randomUUID().toString().replace("-",""))
-                        .transactionAt(LocalDateTime.now())
-                        .build()
-        );
-    }
 
     private void validationCancelBalance(Transaction transaction, Account account, Long amount) {
 
@@ -172,7 +157,7 @@ public class TransactionService {
         }
 
         // 취소 금액과 사용 금액이 다른 경우
-        if(transaction.getAmount() != amount){
+        if(!Objects.equals(transaction.getAmount(), amount)){
             throw new AccountException(ErrorCode.TRANSACTIONAMOUNT_CANCELAMOUNT_UNMATCH);
         }
 

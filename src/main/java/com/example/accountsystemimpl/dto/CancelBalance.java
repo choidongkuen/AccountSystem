@@ -48,7 +48,6 @@ public class CancelBalance {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-
     public static class Response {
 
         private String accountNumber;

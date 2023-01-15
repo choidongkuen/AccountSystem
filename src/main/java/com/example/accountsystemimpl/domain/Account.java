@@ -65,7 +65,4 @@ public class Account {
 
         this.balance += amount;
     }
-
-
-
 }
