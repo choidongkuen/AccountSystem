@@ -8,22 +8,22 @@ import java.time.LocalDateTime;
 
 public class CancelBalance {
 
-    /**
-     * request 파라미터
-     * {
-     * "transactionId" : "1" ,
+
+    /** request 파라미터
+     * "transactionId" : "abcerdsadsadwasdasd",
      * "accountNumber" : "1000000000",
      * "amount" : 1000
-     * }
      */
 
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class Request {
 
         @NotBlank
-        private String transactionId;
+        private Long transactionId;
 
         @NotBlank
         @Size(min = 10, max = 10)
@@ -36,43 +36,37 @@ public class CancelBalance {
 
     }
 
-    /**
-     * response 파라미터
-     * {
+    /** response 파라미터
      * "accountNumber" : "1000000000",
-     * "transactionRequest" : "S",
-     * "transactionId" ~~~~,
+     * "transactionResult" : "S",
+     * "transactionId" : "asdasdsadwe21312asd"
      * "amount" : 1000 ,
-     * "transactionAt" : ~~~~
-     * }
+     * "transactionAt" ~~~
      */
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
+
     public static class Response {
 
         private String accountNumber;
-
         private TransactionResultType transactionResultType;
-
-        private String transactionId;
-
         private Long amount;
-
+        private String transactionId;
         private LocalDateTime transactionAt;
 
-        public static Response from(TransactionDto transactionDto) {
+        public static CancelBalance.Response fromTransactionDto(TransactionDto dto) {
 
-            return Response.builder()
-                           .accountNumber(transactionDto.getAccountNumber())
-                           .transactionResultType(transactionDto.getTransactionResultType())
-                           .transactionId(transactionDto.getTransactionId())
-                           .amount(transactionDto.getAmount())
-                           .transactionAt(transactionDto.getTransactionAt())
-                           .build();
+            return CancelBalance.Response.builder()
+                                  .accountNumber(dto.getAccountNumber())
+                                  .transactionResultType(dto.getTransactionResultType())
+                                  .amount(dto.getAmount())
+                                  .transactionId(dto.getTransactionId())
+                                  .transactionAt(dto.getTransactionAt())
+                                  .build();
         }
+
     }
 }
