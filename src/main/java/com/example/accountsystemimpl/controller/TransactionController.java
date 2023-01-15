@@ -1,7 +1,6 @@
 package com.example.accountsystemimpl.controller;
 
 
-import com.example.accountsystemimpl.domain.Transaction;
 import com.example.accountsystemimpl.dto.CancelBalance;
 import com.example.accountsystemimpl.dto.UseBalance;
 import com.example.accountsystemimpl.exception.AccountException;
@@ -9,7 +8,6 @@ import com.example.accountsystemimpl.exception.TransactionException;
 import com.example.accountsystemimpl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,12 +36,12 @@ public class TransactionController {
         try {
             return UseBalance.Response.fromTransactionDto(
                     transactionService.useBalance(request.getUserId(),
-                            request.getAccountNumber(),request.getAmount())
+                            request.getAccountNumber(), request.getAmount())
             );
         } catch (AccountException e) {
             log.error("Failed to use balance");
             transactionService.saveFailedUserTransaction(
-                    request.getAccountNumber(),request.getAmount()
+                    request.getAccountNumber(), request.getAmount()
             );
             throw e;
         }
@@ -60,7 +58,7 @@ public class TransactionController {
                     transactionService.cancelBalance(request.getTransactionId()
                             , request.getAccountNumber(), request.getAmount())
             );
-        }catch (TransactionException e) {
+        } catch (TransactionException e) {
 
             log.error("Falied to cancel balance");
 
