@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 public class TransactionException extends RuntimeException{
 
     public ErrorCode errorCode;
-    public String message;
+    public String errorMessage;
 
     public TransactionException(ErrorCode errorCode){
         this.errorCode = errorCode;
-        this.message = errorCode.getDescription();
+        this.errorMessage = errorCode.getDescription();
     }
 }
