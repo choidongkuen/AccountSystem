@@ -76,14 +76,14 @@ public class TransactionService {
 
     }
 
-//    @Transactional
-//    public void saveFailedUserTransaction(String accountNumber, Long amount) {
-//
-//        Account account = accountRespository.findByAccountNumber(accountNumber)
-//                                            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
-//
-//        getTransactionDto(USE, FAIL, account, amount);
-//    }
+    @Transactional
+    public void saveFailedUserTransaction(String accountNumber, Long amount) {
+
+        Account account = accountRespository.findByAccountNumber(accountNumber)
+                                            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        getTransactionDto(USE, FAIL, account, amount);
+    }
 
 
     // Option + Command + M
@@ -244,4 +244,3 @@ public class TransactionService {
 }
 
 
-}
