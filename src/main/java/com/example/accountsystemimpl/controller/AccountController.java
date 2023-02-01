@@ -1,6 +1,5 @@
 package com.example.accountsystemimpl.controller;
 
-import com.example.accountsystemimpl.dto.AccountDto;
 import com.example.accountsystemimpl.dto.AccountInfo;
 import com.example.accountsystemimpl.dto.CreateAccount;
 import com.example.accountsystemimpl.dto.DeleteAccount;
@@ -22,7 +21,7 @@ public class AccountController {
     // CreateAccount.Request -> Accont -> Account -> CreatedAccount.Response
     @PostMapping("/account")
     public CreateAccount.Response createAccount(
-            @RequestBody @Valid CreateAccount.Request request){
+            @RequestBody @Valid CreateAccount.Request request) {
 
         return CreateAccount.Response.FromAccountDto(
                 accountService.createAccount(
@@ -35,7 +34,7 @@ public class AccountController {
     // 계좌 해지
     @DeleteMapping("/account")
     public DeleteAccount.Response deleteAccount(
-            @RequestBody @Valid DeleteAccount.Request request){
+            @RequestBody @Valid DeleteAccount.Request request) {
 
 
         return DeleteAccount.Response.fromAccountDto(
@@ -47,14 +46,14 @@ public class AccountController {
     }
 
     // 계좌 확인
-    @GetMapping ("/account")
+    @GetMapping("/account")
     public List<AccountInfo> getAccountByUserId(
             @RequestParam("userId") Long userId
-    ){
+    ) {
 
         return accountService.getAccountsByUserId(userId)
-                .stream().map(AccountInfo :: fromAccountDto)
-                .collect(Collectors.toList());
+                             .stream().map(AccountInfo::fromAccountDto)
+                             .collect(Collectors.toList());
 
     }
 
