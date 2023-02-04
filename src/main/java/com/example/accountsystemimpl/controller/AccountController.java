@@ -1,5 +1,6 @@
 package com.example.accountsystemimpl.controller;
 
+import com.example.accountsystemimpl.aop.AccountLock;
 import com.example.accountsystemimpl.dto.AccountInfo;
 import com.example.accountsystemimpl.dto.CreateAccount;
 import com.example.accountsystemimpl.dto.DeleteAccount;
@@ -20,6 +21,7 @@ public class AccountController {
     // 계좌 생성
     // CreateAccount.Request -> Accont -> Account -> CreatedAccount.Response
     @PostMapping("/account")
+    @AccountLock
     public CreateAccount.Response createAccount(
             @RequestBody @Valid CreateAccount.Request request) {
 
@@ -33,6 +35,7 @@ public class AccountController {
 
     // 계좌 해지
     @DeleteMapping("/account")
+    @AccountLock
     public DeleteAccount.Response deleteAccount(
             @RequestBody @Valid DeleteAccount.Request request) {
 
@@ -47,6 +50,7 @@ public class AccountController {
 
     // 계좌 확인
     @GetMapping("/account")
+    @AccountLock
     public List<AccountInfo> getAccountByUserId(
             @RequestParam("userId") Long userId
     ) {
