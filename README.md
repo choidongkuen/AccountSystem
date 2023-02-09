@@ -6,6 +6,6 @@ Use : Spring, Jpa, MariaDB, Redis, Docker, AWS
 Goal : 계좌 및 거랙 관련 기본적인 계좌 기능을 구현한다.
 
 
-## 계좌
+## 계좌 API
 
 
