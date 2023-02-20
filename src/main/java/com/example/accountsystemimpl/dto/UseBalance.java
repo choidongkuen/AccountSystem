@@ -1,5 +1,6 @@
 package com.example.accountsystemimpl.dto;
 
+import com.example.accountsystemimpl.aop.AccountLockIdInterface;
 import com.example.accountsystemimpl.type.TransactionResultType;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class UseBalance {
     @Builder
     @Getter
     @Setter
-    public static class Request{
+    public static class Request implements AccountLockIdInterface {
 
         @NotNull
         @Min(1)
