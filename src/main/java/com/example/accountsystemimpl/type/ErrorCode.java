@@ -31,7 +31,7 @@ public enum ErrorCode {
     TRANSACTIONAMOUNT_CANCELAMOUNT_UNMATCH("거래 금액과 취소 금액이 다릅니다."),
 
     CANCEL_AFTER_ONE_YEAR_TRANSACTION("해당 거래가 1년이 넘었습니다."),
-    INVALID_REQUEST("올바르지 않는 취소 요청 입니다.");
+    INVALID_REQUEST("올바르지 않는 취소 요청 입니다."), ACCOUNT_TRANSACTION_LOCK("해당 계좌는 사용중 입니다.");
 
     private final String description;
 }
