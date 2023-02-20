@@ -1,9 +1,12 @@
 
 spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
   datasource:
     url: jdbc:h2:mem:account
     username: sa
-    password:
+    password: 1111
     driver-class-name: org.h2.Driver
 
   h2:
@@ -20,7 +23,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-        dialect: H2Dialect # H2 방언 설정
+
 
     hibernate:
       ddl-auto: update
