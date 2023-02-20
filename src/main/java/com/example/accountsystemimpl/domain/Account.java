@@ -6,9 +6,6 @@ import com.example.accountsystemimpl.type.AccountStatus;
 import com.example.accountsystemimpl.type.ErrorCode;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,14 +13,12 @@ import java.time.LocalDateTime;
 @Slf4j
 @Getter
 @Setter
-@Builder
 @Table
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Account {
-
+public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -42,12 +37,8 @@ public class Account {
     private Long balance;
 
     private LocalDateTime registeredAt;
-    private LocalDateTime unRegisteredAt;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private LocalDateTime unRegisteredAt;
 
     public void useBalance(Long amount){
 

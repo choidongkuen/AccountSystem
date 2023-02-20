@@ -35,8 +35,7 @@ public class AccountService {
         // 사용자가 있는지 조회
         // 계좌의 번호 생성(저장된 최신 계좌번호 + 1)
         // 계좌를 저장하고, 정보 저장
-        AccountUser accountUser = accountUserRepository.findById(userId).orElseThrow(() ->
-                new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         validateCreateAccount(accountUser);
 
@@ -56,6 +55,12 @@ public class AccountService {
                                                                     .build()));
     }
 
+    private AccountUser getAccountUser(Long userId) {
+        AccountUser accountUser = accountUserRepository.findById(userId).orElseThrow(() ->
+                new AccountException(USER_NOT_FOUND));
+        return accountUser;
+    }
+
     // 가독성을 위해 메소드 추출(Option + Command + M)
     private void validateCreateAccount(AccountUser accountUser) {
         if (accountRespository.countByAccountUser(accountUser) >= 10) {
@@ -72,9 +77,7 @@ public class AccountService {
     public AccountDto deleteAccount(Long userId, String accountNumber) {
 
         // 사용자 없는 경우
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                                                       .orElseThrow(() -> new AccountException(USER_NOT_FOUND)
-                                                       );
+        AccountUser accountUser = getAccountUser(userId);
 
         // 계좌가 없는 경우
         Account account = accountRespository.findByAccountNumber(accountNumber)
@@ -114,8 +117,7 @@ public class AccountService {
     @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
 
-        AccountUser user = accountUserRepository.findById(userId)
-                                                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser user = getAccountUser(userId);
 
 
         List<Account> accounts = accountRespository.findByAccountUser(user);
