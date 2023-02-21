@@ -71,7 +71,6 @@ public class TransactionController {
         }
     }
 
-    @AccountLock
     @GetMapping("/transaction/{transactionId}")
     public QueryTransactionResponse queryTransaction(
             @PathVariable String transactionId
