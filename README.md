@@ -3,7 +3,7 @@
 
 Use : Spring, Jpa, MariaDB, Redis , H2
 
-Goal : 계좌 및 거랙 관련 기본적인 계좌 기능을 구현한다.
+Goal : 계좌 및 거래 관련 기본적인 계좌 기능을 구현한다.
 
 
 ## 시나리오
