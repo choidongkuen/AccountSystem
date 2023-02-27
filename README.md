@@ -1,7 +1,7 @@
 ## AccountSystem
 계좌 시스템 구현해보기 💸
 
-Use : Spring, Jpa, MariaDB, Redis , H2
+Use : Spring, Jpa, MariaDB, Redis, H2
 
 Goal : 계좌 및 거래 관련 기본적인 계좌 기능을 구현한다.
 
