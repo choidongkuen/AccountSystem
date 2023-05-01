@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.accountsystemimpl.type.ErrorCode.ACCOUNT_NOT_FOUND;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -203,7 +203,6 @@ class AccountServiceTest {
                                        .build();
 
 
-
         // 주어진 userId 통해 찾은 AccountUser -> pobi
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(pobi));
@@ -315,25 +314,25 @@ class AccountServiceTest {
 
     @Test
     @DisplayName("getAccontsByUserId 성공 테스트")
-    void getAccountsByUSerIdSUCCESSTEST(){
+    void getAccountsByUSerIdSUCCESSTEST() {
 
         // given
         AccountUser user = AccountUser.builder()
-                .id(12L)
-                .name("동근")
-                .build();
+                                      .id(12L)
+                                      .name("동근")
+                                      .build();
 
         List<Account> accounts = Arrays.asList(
                 Account.builder()
-                        .accountUser(user)
-                        .accountNumber("1234567890")
-                        .balance(12000L)
-                        .build(),
+                       .accountUser(user)
+                       .accountNumber("1234567890")
+                       .balance(12000L)
+                       .build(),
                 Account.builder()
-                        .accountUser(user)
-                        .accountNumber("2345678901")
-                        .balance(20000L)
-                        .build()
+                       .accountUser(user)
+                       .accountNumber("2345678901")
+                       .balance(20000L)
+                       .build()
         );
 
         given(accountUserRepository.findById(anyLong()))

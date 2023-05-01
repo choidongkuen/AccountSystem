@@ -1,11 +1,9 @@
 package com.example.accountsystemimpl.controller;
 
-import com.example.accountsystemimpl.domain.Account;
 import com.example.accountsystemimpl.dto.AccountDto;
 import com.example.accountsystemimpl.dto.CreateAccount;
 import com.example.accountsystemimpl.dto.DeleteAccount;
 import com.example.accountsystemimpl.service.AccountService;
-import com.example.accountsystemimpl.type.AccountStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,13 +12,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -137,10 +135,10 @@ class AccountControllerTest {
                 Arrays.asList(AccountDto.builder()
                                         .accountNumber("1234567890")
                                         .balance(1000L).build(),
-                             AccountDto.builder()
-                                      .accountNumber("0987654321")
-                                      .balance(2000L)
-                                      .build()
+                        AccountDto.builder()
+                                  .accountNumber("0987654321")
+                                  .balance(2000L)
+                                  .build()
                 );
 
         // given
@@ -148,12 +146,12 @@ class AccountControllerTest {
                 .willReturn(accountDtos);
 
         mockMvc.perform(get("/account?userId=1"))
-                        .andDo(print())
-                        .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
-                .andExpect(jsonPath("$[0].balance").value(1000L))
-                .andExpect(jsonPath("$[1].accountNumber").value("0987654321"))
-                .andExpect(jsonPath("$[1].balance").value(2000L));
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
+               .andExpect(jsonPath("$[0].balance").value(1000L))
+               .andExpect(jsonPath("$[1].accountNumber").value("0987654321"))
+               .andExpect(jsonPath("$[1].balance").value(2000L));
 
 
         // when

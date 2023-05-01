@@ -54,12 +54,12 @@ public class UseBalance {
         public static Response fromTransactionDto(TransactionDto dto) {
 
             return Response.builder()
-                    .accountNumber(dto.getAccountNumber())
-                    .transactionResultType(dto.getTransactionResultType())
-                    .amount(dto.getAmount())
-                    .transactionId(dto.getTransactionId())
-                    .transactionAt(dto.getTransactionAt())
-                    .build();
+                           .accountNumber(dto.getAccountNumber())
+                           .transactionResultType(dto.getTransactionResultType())
+                           .amount(dto.getAmount())
+                           .transactionId(dto.getTransactionId())
+                           .transactionAt(dto.getTransactionAt())
+                           .build();
         }
     }
 }

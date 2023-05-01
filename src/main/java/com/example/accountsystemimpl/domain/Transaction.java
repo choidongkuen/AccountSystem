@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table
 @Entity
-
-
 public class Transaction extends BaseEntity {
 
     @Id
