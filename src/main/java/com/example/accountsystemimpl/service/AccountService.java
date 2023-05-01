@@ -29,6 +29,24 @@ public class AccountService {
     private final AccountRespository accountRespository;
     private final AccountUserRepository accountUserRepository;
 
+    private static void validateDeleteAccount(AccountUser accountUser, Account account) {
+
+        // 계좌 소유주가 다른 경우
+        if (accountUser.getId() != account.getAccountUser().getId()) {
+            throw new AccountException(USER_ACCOUNT_UNMATCH);
+        }
+
+        // 계좌가 이미 해지 상태인 경우
+        if (account.getAccountStatus() == AccountStatus.STOP_USE) {
+            throw new AccountException(ACCOUNT_ALREADY_STOP);
+        }
+
+        // 계좌 잔액이 남아있는 경우
+        if (account.getBalance() > 0) {
+            throw new AccountException(ACCOUNT_HAS_BALANCE);
+        }
+    }
+
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
 
@@ -88,30 +106,15 @@ public class AccountService {
         // 계좌가 이미 해지 상태인 경우
         // 계좌 잔액이 남아있는 경우
         validateDeleteAccount(accountUser, account);
+        return makeAccountDeleted(account);
+    }
 
+    private AccountDto makeAccountDeleted(Account account) {
         account.setUnRegisteredAt(LocalDateTime.now());
         account.setAccountStatus(AccountStatus.STOP_USE);
         accountRespository.save(account);
 
         return AccountDto.fromEntity(account);
-    }
-
-    private static void validateDeleteAccount(AccountUser accountUser, Account account) {
-
-        // 계좌 소유주가 다른 경우
-        if (accountUser.getId() != account.getAccountUser().getId()) {
-            throw new AccountException(USER_ACCOUNT_UNMATCH);
-        }
-
-        // 계좌가 이미 해지 상태인 경우
-        if (account.getAccountStatus() == AccountStatus.STOP_USE) {
-            throw new AccountException(ACCOUNT_ALREADY_STOP);
-        }
-
-        // 계좌 잔액이 남아있는 경우
-        if (account.getBalance() > 0) {
-            throw new AccountException(ACCOUNT_HAS_BALANCE);
-        }
     }
 
     @Transactional

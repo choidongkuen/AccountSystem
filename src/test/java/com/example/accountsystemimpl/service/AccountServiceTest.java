@@ -64,14 +64,15 @@ class AccountServiceTest {
         given(accountRespository.save(any()))
                 .willReturn(Account.builder()
                                    .accountUser(accountUser)
-                                   .accountNumber("1000000013").build());
+                                   .accountNumber("1000000014").build());
         // given
         // when
         AccountDto dto = accountService.createAccount(1L, 1000L);
         // then
 
         assertEquals(12L, dto.getUserId());
-        assertEquals("1000000013", dto.getAccountNumber());
+        assertEquals("1000000014", dto.getAccountNumber());
+        verify(accountRespository, times(1)).save(any());
     }
 
     @Test
